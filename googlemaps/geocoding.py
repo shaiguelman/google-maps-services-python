@@ -19,7 +19,7 @@
 from googlemaps import convert
 
 
-def geocode(client, address=None, components=None, bounds=None, region=None,
+def geocode(client, address=None, place_id=None, components=None, bounds=None, region=None,
             language=None):
     """
     Geocoding is the process of converting addresses
@@ -29,6 +29,10 @@ def geocode(client, address=None, components=None, bounds=None, region=None,
 
     :param address: The address to geocode.
     :type address: string
+
+    :param place_id: A textual identifier that uniquely identifies a place,
+        returned from a Places search.
+    :type place_id: string
 
     :param components: A component filter for which you wish to obtain a
         geocode, for example: ``{'administrative_area': 'TX','country': 'US'}``
@@ -45,13 +49,18 @@ def geocode(client, address=None, components=None, bounds=None, region=None,
     :param language: The language in which to return results.
     :type language: string
 
-    :rtype: list of geocoding results.
+    :rtype: result dict with the following keys:
+            status: status code
+            results: list of geocoding results
     """
 
     params = {}
 
     if address:
         params["address"] = address
+
+    if place_id:
+        params["place_id"] = place_id
 
     if components:
         params["components"] = convert.components(components)
@@ -65,11 +74,11 @@ def geocode(client, address=None, components=None, bounds=None, region=None,
     if language:
         params["language"] = language
 
-    return client._request("/maps/api/geocode/json", params).get("results", [])
+    return client._request("/maps/api/geocode/json", params)
 
 
 def reverse_geocode(client, latlng, result_type=None, location_type=None,
-                    language=None):
+                    language=None, enable_address_descriptor=False):
     """
     Reverse geocoding is the process of converting geographic coordinates into a
     human-readable address.
@@ -87,7 +96,10 @@ def reverse_geocode(client, latlng, result_type=None, location_type=None,
     :param language: The language in which to return results.
     :type language: string
 
-    :rtype: list of reverse geocoding results.
+    :rtype: result dict with the following keys:
+            status: status code
+            results: list of reverse geocoding results
+            address_descriptor: address descriptor for the target
     """
 
     # Check if latlng param is a place_id string.
@@ -106,4 +118,7 @@ def reverse_geocode(client, latlng, result_type=None, location_type=None,
     if language:
         params["language"] = language
 
-    return client._request("/maps/api/geocode/json", params).get("results", [])
+    if enable_address_descriptor:
+        params["enable_address_descriptor"] = "true"
+
+    return client._request("/maps/api/geocode/json", params)

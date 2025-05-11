@@ -1,7 +1,8 @@
 Python Client for Google Maps Services
 ====================================
 
-[![Build Status](https://travis-ci.org/googlemaps/google-maps-services-python.svg?branch=master)](https://travis-ci.org/googlemaps/google-maps-services-python)
+![Test](https://github.com/googlemaps/google-maps-services-js/workflows/Test/badge.svg)
+![Release](https://github.com/googlemaps/google-maps-services-js/workflows/Release/badge.svg)
 [![codecov](https://codecov.io/gh/googlemaps/google-maps-services-python/branch/master/graph/badge.svg)](https://codecov.io/gh/googlemaps/google-maps-services-python)
 [![PyPI version](https://badge.fury.io/py/googlemaps.svg)](https://badge.fury.io/py/googlemaps)
 ![PyPI - Downloads](https://img.shields.io/pypi/dd/googlemaps)
@@ -25,6 +26,7 @@ APIs:
  - Roads API
  - Places API
  - Maps Static API
+ - Address Validation API
 
 Keep in mind that the same [terms and conditions](https://developers.google.com/maps/terms) apply
 to usage of the APIs when they're accessed through this library.
@@ -84,6 +86,16 @@ directions_result = gmaps.directions("Sydney Town Hall",
                                      "Parramatta, NSW",
                                      mode="transit",
                                      departure_time=now)
+
+# Validate an address with address validation
+addressvalidation_result =  gmaps.addressvalidation(['1600 Amphitheatre Pk'], 
+                                                    regionCode='US',
+                                                    locality='Mountain View', 
+                                                    enableUspsCass=True)
+
+# Get an Address Descriptor of a location in the reverse geocoding response
+address_descriptor_result = gmaps.reverse_geocode((40.714224, -73.961452), enable_address_descriptor=True)
+
 ```
 
 For more usage examples, check out [the tests](https://github.com/googlemaps/google-maps-services-python/tree/master/tests).
